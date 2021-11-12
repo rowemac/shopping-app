@@ -24,19 +24,16 @@ const ProductItem = props => {
             <View style={styles.imageContainer}>
               <Image style={styles.image} source={{ uri: props.image }} />
             </View>
-
             <View style={styles.details}>
               <Text style={styles.title}>{props.title}</Text>
               <Text style={styles.price}>${props.price.toFixed(2)}</Text>
             </View>
-
             <View style={styles.actions}>{props.children}</View>
           </View>
         </TouchableCmp>
       </View>
     </View>
   );
-  ß;
 };
 
 const styles = StyleSheet.create({
@@ -52,8 +49,8 @@ const styles = StyleSheet.create({
     margin: 20
   },
   touchable: {
-    overflow: 'hidden',
-    borderRadius: 10
+    borderRadius: 10,
+    overflow: 'hidden'
   },
   imageContainer: {
     width: '100%',
