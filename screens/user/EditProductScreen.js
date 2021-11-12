@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   ScrollView,
@@ -18,7 +18,7 @@ const EditProductScreen = props => {
     state.products.userProducts.find(prod => prod.id === prodId)
   );
 
-  const [title, setTitle] = useState(editedProdct ? editedProduct.title : '');
+  const [title, setTitle] = useState(editedProduct ? editedProduct.title : '');
   const [imageUrl, setImageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ''
   );
@@ -26,6 +26,14 @@ const EditProductScreen = props => {
   const [description, setDescription] = useState(
     editedProduct ? editedProduct.description : ''
   );
+
+  const submitHandler = useCallback(() => {
+    console.log('Submitting!');
+  }, []);
+
+  useEffect(() => {
+    props.navigation.setParams({ submit: submitHandler });
+  }, [submitHandler]);
 
   return (
     <ScrollView>
@@ -70,6 +78,7 @@ const EditProductScreen = props => {
 };
 
 EditProductScreen.navigationOptions = navData => {
+  const submitFn = navData.navigation.getParam('submit');
   return {
     headerTitle: navData.navigation.getParam('productId')
       ? 'Edit Product'
@@ -81,7 +90,7 @@ EditProductScreen.navigationOptions = navData => {
           iconName={
             Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'
           }
-          onPress={() => {}}
+          onPress={submitFn}
         />
       </HeaderButtons>
     )
