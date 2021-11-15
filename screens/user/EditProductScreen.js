@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+import React, { useEffect, useCallback, useReducer } from 'react';
 import {
   View,
   ScrollView,
@@ -14,10 +14,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import HeaderButton from '../../components/UI/HeaderButton';
 import * as productsActions from '../../store/actions/products';
 
-const REDUCER_UPDATE = 'UPDATE';
+const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const formReducer = (state, action) => {
-  if (action.type === 'UPDATE') {
+  if (action.type === FORM_INPUT_UPDATE) {
   }
 };
 
@@ -28,7 +28,7 @@ const EditProductScreen = props => {
   );
   const dispatch = useDispatch();
 
-  useReducer(formReducer, {
+  const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : '',
       imageUrl: editedProduct ? editedProduct.imageUrl : '',
@@ -43,16 +43,6 @@ const EditProductScreen = props => {
     },
     formIsValid: editedProduct ? true : false
   });
-
-  const [title, setTitle] = useState(editedProduct ? editedProduct.title : '');
-  const [titleIsValid, setTitleIsValid] = useState(false);
-  const [imageUrl, setImageUrl] = useState(
-    editedProduct ? editedProduct.imageUrl : ''
-  );
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState(
-    editedProduct ? editedProduct.description : ''
-  );
 
   const submitHandler = useCallback(() => {
     if (!titleIsValid) {
@@ -78,12 +68,16 @@ const EditProductScreen = props => {
   }, [submitHandler]);
 
   const titleChangeHandler = text => {
-    if (text.trim().length === 0) {
-      titleIsValid(false);
-    } else {
-      setTitleIsValid(true);
+    let isValid = false;
+    if (text.trim().length > 0) {
+      isValid = true;
     }
-    setTitle(text);
+    dispatchFormState({
+      type: FORM_INPUT_UPDATE,
+      value: text,
+      isValid: isValid,
+      input: 'title'
+    });
   };
 
   return (
