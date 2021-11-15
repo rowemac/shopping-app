@@ -1,3 +1,4 @@
+import { updateLocale } from 'moment';
 import React, { useEffect, useCallback, useReducer } from 'react';
 import {
   View,
@@ -18,7 +19,25 @@ const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues
+    };
   }
+  return state;
 };
 
 const EditProductScreen = props => {
@@ -67,7 +86,7 @@ const EditProductScreen = props => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
-  const titleChangeHandler = text => {
+  const textChangeHandler = (inputIdentifier, text) => {
     let isValid = false;
     if (text.trim().length > 0) {
       isValid = true;
@@ -76,7 +95,7 @@ const EditProductScreen = props => {
       type: FORM_INPUT_UPDATE,
       value: text,
       isValid: isValid,
-      input: 'title'
+      input: inputIdentifier
     });
   };
 
@@ -88,7 +107,7 @@ const EditProductScreen = props => {
           <TextInput
             style={styles.input}
             value={title}
-            onChangeText={titleChangeHandler}
+            onChangeText={textChangeHandler.bind(this, 'title')}
             keyboardType="default"
             autoCapitalize="sentences"
             autoCorrect
@@ -103,7 +122,7 @@ const EditProductScreen = props => {
           <TextInput
             style={styles.input}
             value={imageUrl}
-            onChangeText={text => setImageUrl(text)}
+            onChangeText={textChangeHandler.bind(this, 'imageUrl')}
           />
         </View>
         {editedProduct ? null : (
@@ -112,7 +131,7 @@ const EditProductScreen = props => {
             <TextInput
               style={styles.input}
               value={price}
-              onChangeText={text => setPrice(text)}
+              onChangeText={textChangeHandler.bind(this, 'price')}
               keyboardType="decimal-pad"
             />
           </View>
@@ -122,7 +141,7 @@ const EditProductScreen = props => {
           <TextInput
             style={styles.input}
             value={description}
-            onChangeText={text => setDescription(text)}
+            onChangeText={textChangeHandler.bind(this, 'description')}
           />
         </View>
       </View>
