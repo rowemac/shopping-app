@@ -100,7 +100,7 @@ const EditProductScreen = props => {
     (inputIdentifier, inputValue, inputValidity) => {
       dispatchFormState({
         type: FORM_INPUT_UPDATE,
-        value: text,
+        value: inputValue,
         isValid: inputValidity,
         input: inputIdentifier
       });
@@ -112,33 +112,43 @@ const EditProductScreen = props => {
     <ScrollView>
       <View style={styles.form}>
         <Input
+          id="title"
           label="Title"
           errorText="Please enter a valid title."
           keyboardType="default"
           autoCapitalize="sentences"
           autoCorrect
           returnKeyType="next"
-          onInputChange={inputChangeHandler.bind(this, 'title')}
+          onInputChange={inputChangeHandler}
           initialValue={editedProduct ? editedProduct.title : ''}
           initiallyValid={!!editedProduct}
+          required
         />
         <Input
+          id="imageUrl"
           label="Image URL"
           errorText="Please enter a valid image url."
           keyboardType="default"
           returnKeyType="next"
+          onInputChange={inputChangeHandler}
           initialValue={editedProduct ? editedProduct.imageUrl : ''}
           initiallyValid={!!editedProduct}
+          required
         />
         {editedProduct ? null : (
           <Input
+            id="price"
             label="Price"
             errorText="Please enter a valid price."
             keyboardType="decimal-pad"
             returnKeyType="next"
+            onInputChange={inputChangeHandler}
+            required
+            min={0.1}
           />
         )}
         <Input
+          id="description"
           label="Description"
           errorText="Please enter a valid description."
           keyboardType="default"
@@ -146,9 +156,11 @@ const EditProductScreen = props => {
           autoCorrect
           multiline
           numberOfLines={3}
-          returnKeyType="next"
+          onInputChange={inputChangeHandler}
           initialValue={editedProduct ? editedProduct.description : ''}
           initiallyValid={!!editedProduct}
+          required
+          minLength={3}
         />
       </View>
     </ScrollView>
