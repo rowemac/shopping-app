@@ -29,13 +29,13 @@ const Input = props => {
     touched: false
   });
 
-  const { onInputChange } = props;
+  const { onInputChange, id } = props;
 
   useEffect(() => {
     if (inputState.touched) {
       props.onInputChange(inputState.value, inputState.isValid);
     }
-  }, [inputState, onInputChange]);
+  }, [inputState, onInputChange, id]);
 
   const textChangeHandler = text => {
     const emailRegex =
